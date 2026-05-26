@@ -40,7 +40,7 @@ class HayBTechClient:
         options = options or {}
         
         # Security: Use getenv or default, avoid hardcoding secrets
-        self.base_url = options.get('base_url') or 'https://api.haybtech.com/v1'
+        self.base_url = options.get('base_url') or 'https://app.haybtech.com/v1'
         self.timeout = options.get('timeout') or 15
 
         self.payments = Payments(self)
