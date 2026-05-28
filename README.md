@@ -8,6 +8,34 @@ Official Python SDK for the HayBTech Payment Gateway API -- mobile payments acro
 
 ---
 
+## Intégration par IA (Prompt pour Marchands)
+
+Si vous utilisez un assistant IA (comme Cursor, GitHub Copilot, ChatGPT, Claude, etc.), vous pouvez copier-coller le prompt suivant pour intégrer ce SDK de A à Z dans votre projet :
+
+```text
+Agis en tant qu'expert en développement backend Python. Je souhaite intégrer la solution de paiement HayBTech (Afrique de l'Ouest) sur mon site marchand de A à Z avec le SDK Python officiel `haybtech-sdk`.
+
+Voici ma stack technique actuelle :
+- Framework : [ex: Django, Flask, FastAPI]
+- Base de données & ORM : [ex: Django ORM, SQLAlchemy, Tortoise ORM]
+- Modèle de commande : [décrivez brièvement votre structure de table Order, ex: { id, status (pending/paid/failed), amount, email }]
+
+Tâches à accomplir dans le code généré :
+1. **Initialisation & Config** : Configurer le client SDK `HayBTechClient` en chargeant la clé secrète via l'environnement (`HAYBTECH_SECRET_KEY`).
+2. **Création du Paiement** : Créer une vue/route pour initier le paiement. Elle doit récupérer le montant de la commande, générer la transaction via le SDK en passant `merchant_ref`, `amount`, `currency='XOF'`, `success_url`, `failed_url`, `callback_url`, puis renvoyer l'URL de redirection vers le guichet de paiement.
+3. **Webhook de Validation** : Créer une vue/route `/webhook/haybtech` acceptant le POST de HayBTech. Elle doit :
+   - Récupérer le corps de la requête brut (raw request body) et le header `X-HayBTech-Signature`.
+   - Utiliser `Webhook.construct_event(payload, signature, secret)` pour valider l'événement.
+   - Gérer l'événement `payment.success` : marquer la commande comme payée de façon idempotente et valider le panier.
+   - Gérer l'événement `payment.failed` : marquer la commande en échec.
+   - Renvoyer une réponse HTTP 200.
+4. **Sécurité & Gestion des Erreurs** : Intercepter `SignatureException` et `ApiException`, logger les erreurs de façon propre, et utiliser une comparaison de signature insensible aux attaques temporelles.
+
+Génère un code propre, modulaire, commenté et prêt à être inséré dans mon projet.
+```
+
+---
+
 ## Installation
 
 ```bash
@@ -193,8 +221,5 @@ This SDK is built for **Maximum Security**:
 | `client.payments`      | Create, retrieve, list, and verify transactions   |
 | `client.webhooks`      | Manage notification endpoints programmatically    |
 
----
-
 MIT License
-# haybtech-python-sdk
-# haybtech-python-sdk
+
